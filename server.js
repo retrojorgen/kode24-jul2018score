@@ -8,6 +8,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
 const moment = require("moment")
+const cors = require("cors")
 const files = require('./files.js')
 const db = require('./db.js');
 const app = express()
@@ -21,6 +22,8 @@ app.use(express.static(path.join(__dirname, 'client/build')))
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(cookieParser())
+
+app.use(cors())
  
 // parse application/json
 app.use(bodyParser.json());
@@ -32,6 +35,16 @@ app.get('/api/user/score', async (req, res) => {
 
 app.get('/api/folder/score', async (req, res) => {
   let users = await db.getUsersScoreByFolder();
+  res.send(users);
+});
+
+app.get('/api/score/folder', cors(), async (req, res) => {
+  let users = await db.getPublicUsersScoreByFolder();
+  res.send(users);
+});
+
+app.get('/api/score/',cors(), async (req, res) => {
+  let users = await db.getPublicUsersByScore();
   res.send(users);
 });
 

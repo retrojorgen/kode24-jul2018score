@@ -58,8 +58,28 @@ async function getUsersScoreByFolder() {
   }
 }
 
+async function getPublicUsersByScore() {
+  try {
+    return await User.find({}).select('-_id username aggregatedAnswerCount').sort("-aggregatedAnswerCount").exec();
+  } catch (error) {
+		console.log('dataerror',error);
+    return false;
+  }
+}
+
+async function getPublicUsersScoreByFolder() {
+  try {
+    return await Folder.find({passphrase: { $exists: true}, "answers.0": { "$exists": true }}).select('-_id name').sort({"answers.length": -1}).populate("answers", "-_id username").exec();
+  } catch (error) {
+		console.log('dataerror',error);
+    return false;
+  }
+}
+
 
 module.exports = {
+  getPublicUsersByScore: getPublicUsersByScore,
+  getPublicUsersScoreByFolder: getPublicUsersScoreByFolder,
   getUsersByScore:getUsersByScore,
   getUsersScoreByFolder: getUsersScoreByFolder
 };
