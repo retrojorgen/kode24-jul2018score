@@ -40,24 +40,6 @@ const FolderSchema = new mongoose.Schema({
 const Folder = mongoose.model("Folder", FolderSchema);
 const User = mongoose.model("User", UserSchema);
 
-async function getUsersByScore() {
-  try {
-    return await User.find({}).sort("-aggregatedAnswerCount").exec();
-  } catch (error) {
-		console.log('dataerror',error);
-    return false;
-  }
-}
-
-async function getUsersScoreByFolder() {
-  try {
-    return await Folder.find({passphrase: { $exists: true}, "answers.0": { "$exists": true }}).sort({"answers.length": -1}).populate("answers").exec();
-  } catch (error) {
-		console.log('dataerror',error);
-    return false;
-  }
-}
-
 async function getPublicUsersByScore() {
   try {
     return await User.find({}).select('-_id username aggregatedAnswerCount').sort("-aggregatedAnswerCount").exec();
@@ -79,7 +61,5 @@ async function getPublicUsersScoreByFolder() {
 
 module.exports = {
   getPublicUsersByScore: getPublicUsersByScore,
-  getPublicUsersScoreByFolder: getPublicUsersScoreByFolder,
-  getUsersByScore:getUsersByScore,
-  getUsersScoreByFolder: getUsersScoreByFolder
+  getPublicUsersScoreByFolder: getPublicUsersScoreByFolder
 };
