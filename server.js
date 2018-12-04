@@ -15,6 +15,9 @@ const app = express()
 
 console.log(new Date());
 
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'client')))
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -40,7 +43,7 @@ app.get('/api/score/',cors(), async (req, res) => {
 
 
 app.get('*', (req, res) => {
-  res.send(404, {});
+  res.sendFile(path.join(__dirname+'/client/index.html'));
 })
 
 const port = process.env.PORT || 5000;
