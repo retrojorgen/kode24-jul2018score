@@ -7,14 +7,23 @@ const PageWrapper = styled.div`
   th {
     padding: 10px;
     text-align: left;
+    font-size: 20px;
   }
   th {
     border-bottom: 2px solid green;
   }
   .limit {
-    tr:nth-child(1n+10) {
-      display: none;
-    }
+  
+  }
+
+  button {
+    display: block;
+    background-color: #0dff00;
+    color: black;
+    border: 0;
+    border-radius: 2px;
+    width: 100%;
+    padding: 10px 20px;
   }
 
   .col {
@@ -30,6 +39,33 @@ const PageWrapper = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: center;
+    margin: 0 auto;
+    text-align: center;
+    .votes {
+      margin: 0 40px 0 40px;
+    }
+  }
+
+  .winnerpopup {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    font-size: 40px;
+    .winner {
+      background-color: black;
+      border-radius: 4px;
+      padding: 20px;
+    }
+    &.active {
+      visibility: visible;
+    }
   }
   
 `;
@@ -38,7 +74,12 @@ class Master extends Component {
 
   state = {
     users: [],
-    folders: []
+    folders: [],
+    winner: {
+      username: "",
+      email: "",
+      show: false
+    }
   };
   
   componentDidMount () {
@@ -54,62 +95,63 @@ class Master extends Component {
     })
   }
 
+  pickWinner(folder) {
+    var winner = folder.answers[Math.floor((Math.random() * folder.answers.length-1) + 0)];
+    this.setState({
+      winner: {
+        username: winner.username,
+        email: winner.email,
+        show: true
+      }
+    })
+  }
+
   render () {
     let users = this.state.users; 
     let folders = this.state.folders;
     console.log(folders);
     return (
       <PageWrapper>
-        <div class="header"></div>
-        <div class="scores">
-          <div class="col">
-            <h2>antall brukere: {users.length}</h2>
-            <table class="highscore">
-              <thead>
-                <tr>
-                <th>#</th><th>Score</th><th>Username</th><th>email</th>
-                </tr>
-              </thead>
-              <tbody>
-              {users.map((user, key) => (
-                <tr>
-                  <td>{key+1}</td><td>{user.aggregatedAnswerCount}</td><td>{user.username}</td><td>{user.email}</td>
-                </tr>
-              ))}
-              </tbody>
-            </table>
-          </div>
 
-          <div class="col">
-          {folders.map((folder) => (
-            <table class="limit">
-              <thead>
-              <tr>
-                <th colspan="3">
-                  <h2>Mappe {folder.fullpath} svar: {folder.answers.length}</h2> 
-                </th>
-              </tr>
-              <tr>
-                <th>#</th>
-                <th>username</th>
-                <th>email</th>
-              </tr>
-              </thead>
-              <tbody>
-              
-                {folder.answers && folder.answers.map((answer, key) => (
-                  <tr>
-                    <td>{key}</td>
-                    <td>{answer.username}</td>
-                    <td>{answer.email}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className={`winnerpopup ${this.state.winner.show ? "active": ""}`}>
+
+          <div className="winner">
+            <p>Vinneren er: {this.state.winner.username}</p>
+            <p>Contact at: {this.state.winner.email}</p>
+            <button onClick={() => this.setState({winner: {username: "", email:"", show: false}})}>Lukk</button>
+          </div>
+        </div>
+        <div className="header"></div>
+        <div className="scores">
+          {folders.map((folder, key) => (
+            <div className="votes" key={key}>
+              <table className="limit">
+                <thead>
+                <tr>
+                  <th colSpan="3">
+                    <h2>Mappe {folder.fullpath} svar: {folder.answers.length}</h2> 
+                    <button onClick={() => this.pickWinner(folder)}>Trekk vinner!</button>
+                  </th>
+                </tr>
+                <tr>
+                  <th>#</th>
+                  <th>username</th>
+                </tr>
+                </thead>
+                <tbody>
+                
+                  {folder.answers && folder.answers.map((answer, key) => (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>{answer.username}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )
           )}
           </div>
-        </div>
       </PageWrapper>
       
     )
