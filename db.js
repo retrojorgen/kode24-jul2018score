@@ -51,7 +51,7 @@ async function getUsersByScore() {
 
 async function getUsersScoreByFolder() {
   try {
-    return await Folder.find({passphrase: { $exists: true}, "answers.0": { "$exists": true }}).sort({"answers.length": -1}).populate("answers").exec();
+    return await Folder.find({passphrase: { $exists: true}, "answers.0": { "$exists": true }}).sort({"answers.length": -1, "name": 1}).populate("answers").exec();
   } catch (error) {
 		console.log('dataerror',error);
     return false;
