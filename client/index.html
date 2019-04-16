@@ -31,7 +31,7 @@
       $(function() {
         var topScore = 0;
         var placementHolder = 1;
-        $.get("https://paske2019-highscore.kode24.no", function(scores) {
+        $.get("https://paaske2019-highscore.kode24.no", function(scores) {
           //$.get("http://localhost:5000/api/score", function(scores) {
           topScore = scores[0].aggregatedAnswerCount;
           scores.forEach(function(score, index) {
