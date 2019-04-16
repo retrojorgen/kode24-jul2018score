@@ -1,62 +1,74 @@
 <html>
-    <head>
-            <link href="https://bcrikko.github.io/NES.css/css/nes.css" rel="stylesheet" />
-            <style>
-                .scoreboard {
-                    
-                }
-                body {
-                    background-color: #212529;
-                }
-                table {
-                    table-layout: fixed;
-                    width: 100%;
-                }
-                th:nth-child(1) {
-                    width: 60px;
-                }
-                th:nth-child(2) {
-                    width: 60px;
-                }
-            </style>
-    </head>
-    <body>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-        <script>
-            $(function () {
-                var topScore= 0;
-                var placementHolder = 1;
-                $.get("https://kode24-highscoreapi.herokuapp.com/api/score", function(scores) {
-                    topScore = scores[0].aggregatedAnswerCount;
-                    scores.forEach(function (score, index) {
-                    
-                    if(topScore > score.aggregatedAnswerCount) {
-                        placementHolder++;
-                        topScore = score.aggregatedAnswerCount;
-                    }
-                    
-                    if(score.aggregatedAnswerCount > 0) {
-                        $(".scores").append("<tr><td>"  + placementHolder + "</td><td>" + score. aggregatedAnswerCount + "</td><td>" + score.username + "</td></tr>")                    
-                    }
-                    })
-                });
-            });
-        </script>
-        
-        <div class="scoreboard container is-rounded with-title is-dark">
-            <h2 class="title">Highscore jul2018</h2>
-            <table class="table is-bordered is-centered">
-                <thead>
-                    <tr>
-                        <th><i class="icon trophy"></i></th>
-                        <th><i class="icon heart"></i></th>
-                        <th><i class="icon like"></i></th>
-                    </tr>
-                </thead>    
-                <tbody class="scores">
-            
-                </tbody>
-            </table>
-        </div>
-    </body>
+  <head>
+    <link
+      href="https://unpkg.com/nes.css@latest/css/nes.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .scoreboard {
+      }
+      body {
+        background-color: #212529;
+      }
+      table {
+        table-layout: fixed;
+        width: 100%;
+      }
+      td {
+        text-align: left;
+      }
+      th:nth-child(1) {
+        width: 60px;
+      }
+      th:nth-child(2) {
+        width: 120px;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+      $(function() {
+        var topScore = 0;
+        var placementHolder = 1;
+        $.get("https://paske2019-highscore.kode24.no", function(scores) {
+          //$.get("http://localhost:5000/api/score", function(scores) {
+          topScore = scores[0].aggregatedAnswerCount;
+          scores.forEach(function(score, index) {
+            if (topScore > score.aggregatedAnswerCount) {
+              placementHolder++;
+              topScore = score.aggregatedAnswerCount;
+            }
+
+            if (score.aggregatedAnswerCount > 0) {
+              $(".scores").append(
+                "<tr><td>" +
+                  placementHolder +
+                  "</td><td>" +
+                  score.aggregatedAnswerCount +
+                  "</td><td>" +
+                  score.username +
+                  "</td></tr>"
+              );
+            }
+          });
+        });
+      });
+    </script>
+
+    <div class="scoreboard nes-container is-rounded with-title is-dark">
+      <h2 class="title">Highscore Påske 2019</h2>
+
+      <table class="nes-table is-bordered">
+        <thead>
+          <tr>
+            <th><i class="icon trophy"></i>#</th>
+            <th><i class="icon heart"></i>Poeng</th>
+            <th><i class="icon like"></i>Brukernavn</th>
+          </tr>
+        </thead>
+        <tbody class="scores"></tbody>
+      </table>
+    </div>
+  </body>
 </html>
